@@ -35,3 +35,8 @@ The agents can access the Customer applications via secured channels from home, 
 ### 3. Camera Tampering Chart 
 
 ![](Screenshots/CameraTamperingDashboard.png)
+
+
+### 4. Mobile Detected
+
+![](Screenshots/Mobile-Detected.jpg)
