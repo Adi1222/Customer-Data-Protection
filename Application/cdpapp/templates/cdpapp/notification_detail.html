@@ -1,0 +1,36 @@
+{% extends 'cdpapp/base.html' %}
+
+{% block title %}Notification{% endblock %}
+
+{% block content %}
+
+
+<div class="container-fluid">
+    <br>
+            <div class="row">
+            <div class="col-sm-12">
+                <div class="white-box analytics-info">
+                    <div class="login-page1">
+                        <div class="banner">
+                                 <h2 class="head">Incident Image</h2>
+                        </div>
+
+
+                            <div class="img-container">
+                            {% if notification.incident_img %}
+                                <img class="center fit" src="{{notification.incident_img.url}}"   alt="No Image">
+                            {% endif %}
+                            </div>
+
+                            <div >
+                                    <a href="{% url 'cdpapp:current_notifications'  %}" class="btn btn-primary" style="width: 115px;height: 35px;display:inline-block;">Back</a>
+
+                            </div>
+
+                    </div>
+                    </div>
+                </div>
+            </div>
+</div>
+
+{% endblock %}

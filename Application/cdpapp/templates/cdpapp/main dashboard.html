@@ -1,0 +1,213 @@
+{% extends 'cdpapp/base.html'  %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+
+    <div class="container-fluid">
+        <div class="row bg-title">
+            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                <h4 class="page-title">Dashboard</h4> </div>
+            <!-- /.col-lg-12 -->
+        </div>
+
+        {% if request.user.is_superuser  %}
+
+
+            <div class="row">
+
+
+                    <div class="col-lg-4 col-sm-6 col-xs-12">
+                        <div class="white-box analytics-info">
+                            <h3 class="box-title">Multiple People</h3>
+                            <ul style="list-style: none;">
+                                <li>
+                                    <i class="fas fa-users" style="font-size: 30px; margin-bottom: 14px;"></i>
+                                </li>
+                                <li class="text-right"><i class="ti-arrow-up text-success"></i> <span  style="font-size: 20px;color:green;">Today: {{multiple_people_today}}</span></li>
+                                <li class="text-right"><i class="ti-arrow-up text-success"></i><span  style="font-size: 20px;color:green;">Total: {{multiple_people}}</span></li>
+                            </ul>
+                            <a href="{% url 'cdpapp:multiple_people_details_dashboard' %}" style="font-size: 20px; text-align: center;">View Details</a>
+                        </div>
+                    </div>
+
+
+
+
+
+
+                <div class="col-lg-4 col-sm-6 col-xs-12">
+                    <div class="white-box analytics-info">
+                        <h3 class="box-title">Mobile Detected</h3>
+                        <ul style="list-style: none;">
+                            <li>
+                                <i class="fa fa-mobile" style="font-size: 30px; margin-bottom: 14px;"></i>
+                            </li>
+                            <li class="text-right"><i class="ti-arrow-up text-success"></i> <span  style="font-size: 20px;color:green;">Today: {{mobile_detected_today}}</span></li>
+                            <li class="text-right"><i class="ti-arrow-up text-success"></i><span  style="font-size: 20px;color:green;">Total: {{mobile_detected}}</span></li>
+
+                        </ul>
+                        <a href="{% url 'cdpapp:mobile_detected_details_dashboard' %}" style="font-size: 20px; text-align: center;">View Details</a>
+                    </div>
+                </div>
+
+
+
+
+
+                <div class="col-lg-4 col-sm-6 col-xs-12">
+                    <div class="white-box analytics-info">
+                        <h3 class="box-title">Unidentified Person</h3>
+                        <ul style="list-style: none;">
+                            <li>
+                                <i class="fa fa-user" style="font-size: 30px; margin-bottom: 14px;"></i>
+                            </li>
+                            <li class="text-right"><i class="ti-arrow-up text-success"></i> <span  style="font-size: 20px;color:green;">Today: {{unidentified_person_today}}</span></li>
+                            <li class="text-right"><i class="ti-arrow-up text-success"></i><span  style="font-size: 20px;color:green;">Total: {{unidentified_person}}</span></li>
+
+                        </ul>
+                        <a href="{% url 'cdpapp:unidentified_person_details_dashboard' %}" style="font-size: 20px; text-align: center;">View Details</a>
+                    </div>
+                </div>
+
+                </div>
+
+
+
+
+                <div class="row">
+
+
+
+                    <div class="col-lg-4 col-sm-6 col-xs-12">
+                        <div class="white-box analytics-info">
+                            <h3 class="box-title">Camera Tampering Count</h3>
+                            <ul style="list-style: none;">
+                                <li>
+                                    <i class="fas fa-camera" style="font-size: 30px; margin-bottom: 14px;"></i>
+                                </li>
+                                <li class="text-right"><i class="ti-arrow-up text-success"></i> <span  style="font-size: 20px;color:green;">Today: {{camera_tampered_today}}</span></li>
+                                <li class="text-right"><i class="ti-arrow-up text-success"></i><span  style="font-size: 20px;color:green;">Total: {{camera_tampered}}</span></li>
+                            </ul>
+                            <a href="{% url 'cdpapp:camera_tampering_details_dashboard' %}" style="font-size: 20px; text-align: center;">View Details</a>
+                        </div>
+                    </div>
+
+
+
+            </div>
+
+
+
+
+        {% else %}
+
+            <div class="row">
+
+                {% for submenu in submenusvalue %}
+                    {% if submenu.id == 31  %}
+
+                            <div class="col-lg-4 col-sm-6 col-xs-12">
+                                <div class="white-box analytics-info">
+                                    <h3 class="box-title">Multiple People</h3>
+                                    <ul style="list-style: none;">
+                                        <li>
+                                            <i class="fas fa-users" style="font-size: 30px; margin-bottom: 14px;"></i>
+                                        </li>
+                                        <li class="text-right"><i class="ti-arrow-up text-success"></i> <span  style="font-size: 20px;color:green;">Today: {{multiple_people_today}}</span></li>
+                                        <li class="text-right"><i class="ti-arrow-up text-success"></i><span  style="font-size: 20px;color:green;">Total: {{multiple_people}}</span></li>
+                                    </ul>
+                                    <a href="{% url 'cdpapp:multiple_people_details_dashboard' %}" style="font-size: 20px; text-align: center;">View Details</a>
+                                </div>
+                            </div>
+                    {% endif %}
+                {% endfor %}
+
+
+
+                {% for submenu in submenusvalue %}
+                    {% if submenu.id == 32 %}
+
+                        <div class="col-lg-4 col-sm-6 col-xs-12">
+                            <div class="white-box analytics-info">
+                                <h3 class="box-title">Mobile Detected</h3>
+                                <ul style="list-style: none;">
+                                    <li>
+                                        <i class="fa fa-mobile" style="font-size: 30px; margin-bottom: 14px;"></i>
+                                    </li>
+                                    <li class="text-right"><i class="ti-arrow-up text-success"></i> <span  style="font-size: 20px;color:green;">Today: {{mobile_detected_today}}</span></li>
+                                    <li class="text-right"><i class="ti-arrow-up text-success"></i><span  style="font-size: 20px;color:green;">Total: {{mobile_detected}}</span></li>
+
+                                </ul>
+                                <a href="{% url 'cdpapp:mobile_detected_details_dashboard' %}" style="font-size: 20px; text-align: center;">View Details</a>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+
+
+
+
+                {% for submenu in submenusvalue %}
+                    {% if submenu.id == 33 %}
+                        <div class="col-lg-4 col-sm-6 col-xs-12">
+                            <div class="white-box analytics-info">
+                                <h3 class="box-title">Unidentified Person</h3>
+                                <ul style="list-style: none;">
+                                    <li>
+                                        <i class="fa fa-user" style="font-size: 30px; margin-bottom: 14px;"></i>
+                                    </li>
+                                    <li class="text-right"><i class="ti-arrow-up text-success"></i> <span  style="font-size: 20px;color:green;">Today: {{unidentified_person_today}}</span></li>
+                                    <li class="text-right"><i class="ti-arrow-up text-success"></i><span  style="font-size: 20px;color:green;">Total: {{unidentified_person}}</span></li>
+
+                                </ul>
+                                <a href="{% url 'cdpapp:unidentified_person_details_dashboard' %}" style="font-size: 20px; text-align: center;">View Details</a>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+
+
+
+            <div class="row">
+
+
+
+
+                {% for submenu in submenusvalue %}
+                    {% if submenu.id == 33 %}
+                        <div class="col-lg-4 col-sm-6 col-xs-12">
+                            <div class="white-box analytics-info">
+                                <h3 class="box-title">Camera Tampering Count</h3>
+                                <ul style="list-style: none;">
+                                    <li>
+                                        <i class="fas fa-camera" style="font-size: 30px; margin-bottom: 14px;"></i>
+                                    </li>
+                                    <li class="text-right"><i class="ti-arrow-up text-success"></i> <span  style="font-size: 20px;color:green;">Today: {{camera_tampered_today}}</span></li>
+                                    <li class="text-right"><i class="ti-arrow-up text-success"></i><span  style="font-size: 20px;color:green;">Total: {{camera_tampered}}</span></li>
+                                </ul>
+                                <a href="{% url 'cdpapp:camera_tampering_details_dashboard' %}" style="font-size: 20px; text-align: center;">View Details</a>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+
+
+
+
+            </div>
+
+
+
+        {% endif %}
+
+
+
+
+
+
+    </div>
+
+{%  endblock %}

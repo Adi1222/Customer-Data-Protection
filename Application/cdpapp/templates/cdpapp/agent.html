@@ -1,0 +1,56 @@
+{% extends 'cdpapp/base.html' %}
+
+{% block title %}Agents{% endblock %}
+
+{% block content %}
+
+<div class="container">
+            <div class="login-page">
+                    <div class="banner">
+                         <h2 class="head">Agent</h2>
+                    </div>
+                    <form action="{% url 'cdpapp:add_agent' %}" method="POST">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="fname" class="lables">First Name</label>
+                            <input type="text" name="f_name" class="form-control" placeholder="First Name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="lname" class="lables">Last Name</label>
+                            <input type="text" name="l_name" class="form-control" placeholder="Last Name" required>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="lname" class="lables">Mac ID </label>
+                            <input type="text" name="mac_id" class="form-control" placeholder="Mac ID " required>
+                        </div>
+
+
+                            <div class="form-group">
+                              <label for="sel1" class="lables">Choose Lead</label>
+                                <select class="form-control" id="lead" name="lead">
+                                      <option selected>--select--</option>
+                                            {% for lead in leads %}
+                                                <option>{{lead.user.first_name}}</option>
+                                            {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                  <label for="sel1" class="lables">Choose Manager</label>
+                                        <select class="form-control" id="manager" name="manager">
+                                              <option selected>--select--</option>
+                                                    {% for manager in managers %}
+                                                        <option>{{manager.user.first_name}}</option>
+                                                    {% endfor %}
+                                        </select>
+                            </div>
+
+                        <button type="submit" class="btn">Submit</button>
+                    </form>
+            </div>
+</div>
+
+{% endblock %}

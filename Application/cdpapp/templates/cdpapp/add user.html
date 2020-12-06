@@ -1,0 +1,80 @@
+
+{% extends 'cdpapp/base.html' %}
+
+{% block title %}Add User{% endblock %}
+
+{% block content %}
+
+    <div class="container-fluid">
+        <br>
+        <!-- /.row -->
+        <!-- ============================================================== -->
+        <!-- Different data widgets -->
+        <!-- ============================================================== -->
+        <!-- .row -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="white-box analytics-info">
+                <div class="login-page1">
+                             {% if messages %}
+                                <ul>
+                                    {% for message in messages %}
+                                        <div class="alert alert-danger">
+                                            {{ message }}
+                                        </div>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+
+
+
+
+
+
+                    <div class="banner">
+                         <h2 class="head">Add User</h2>
+                    </div>
+                    <form action="" method="POST">
+                        {% csrf_token %}
+
+                        {% if user.is_authenticated %}
+                            <div class="form-group">
+                                {{ user_form.as_p }}
+
+                                {% if request.user.is_superuser %}
+                                <div class="form-group">
+                                    {{ super_admin_user_form.as_p }}
+                                </div>
+                                {% else %}
+                                    {{ other_user_form.as_p }}
+                                {% endif %}
+
+                            <div class="">
+                                <label for="sel1" class="lables">Designation</label>
+                                    <select class="" id="desig" name="desig">
+                                      <option>--select--</option>
+                                      <option>Lead</option>
+                                      <option>Manager</option>
+                                    </select>
+                            </div>
+
+                                {% if error %}
+                                      {% for e in error %}
+                                           <p style="color: red">{{ e }}</p>
+                                      {% endfor %}
+                                {% endif %}
+
+                            </div>
+                        {% endif %}
+
+
+                        <button type="submit" class="btn">Register</button>
+                    </form>
+                </div>
+            </div>
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}

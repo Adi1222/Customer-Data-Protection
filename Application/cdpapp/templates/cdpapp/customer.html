@@ -1,0 +1,148 @@
+{% extends 'cdpapp/base.html' %}
+
+{% block title %}Customer{% endblock %}
+
+{% block content %}
+
+<script type="text/javascript">
+    $(document).ready(()=>{
+
+
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth()+1; //January is 0!
+        var yyyy = today.getFullYear();
+         if(dd<10){
+                dd='0'+dd
+            }
+            if(mm<10){
+                mm='0'+mm
+            }
+
+        today = yyyy+'-'+mm+'-'+dd;
+        document.getElementById("datefield").setAttribute("max", today);
+
+
+        $('#cust').on('input', function() {
+        $(this).val($(this).val().replace(/[^a-z0-9]/gi, ''));
+        });
+
+        $('#cacr').on('input', function() {
+        $(this).val($(this).val().replace(/[^a-z0-9]/gi, ''));
+        });
+
+
+        $('#cust').on('input', function() {
+            var customer = $('#cust').val();
+             $.ajax({
+                    url:'{% url 'cdpapp:customer_validation' %}',
+                    type: 'POST',
+                    data:{customer:customer},
+                })
+                .done(function(response){
+
+                    if(response.present > 0) {
+                        alert("Customer Organization already exists.Please enter a different name!");
+                        $('#cust').val('');
+                    }
+
+                })
+                .fail(function(){
+                    console.log("Failed");
+                    alert("Failed");
+                });
+
+
+        });
+
+    });
+</script>
+
+    <div class="container-fluid">
+        <br>
+        <!-- /.row -->
+        <!-- ============================================================== -->
+        <!-- Different data widgets -->
+        <!-- ============================================================== -->
+        <!-- .row -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="white-box analytics-info">
+                    <div class="login-page">
+                        {% if messages %}
+
+                                {% for message in messages %}
+                                    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                                        <div class="alert alert-danger">
+                                            {{ message }}
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+
+                        {% endif %}
+                        <div class="banner">
+                             <h2 class="head">Customer</h2>
+                        </div>
+                        <form action="{% url 'cdpapp:add_customer' %}" method="POST">
+                            {% csrf_token %}
+
+                          <div class="row">
+                            <div class="form-group col-sm-12">
+                                <label for="ip" class="lables">Customer Organization</label>
+                                <input type="text" id="cust" name="cust_org" class="form-control" placeholder="Customer Org" maxlength = "50" required>
+                            </div>
+                          </div>
+
+                            <div class="row">
+                            <div class="form-group col-sm-12">
+                              <label for="cam" class="lables">Customer Acronym</label>
+                                <input type="text" id="cacr" name="cust_acro" class="form-control" placeholder="Acronym" maxlength = "15" required>
+                            </div>
+                          </div>
+
+
+
+                            <div class="form-group">
+                              <label for="sel1" class="lables">OnBoard Date</label>
+                                <input type="date" id="datefield" min='2000-01-01' max='2015-13-13'  name="onboard" class="form-control">
+                            </div>
+
+
+
+                           <div class="form-group">
+                          <label for="sel2" class="lables">Status</label>
+                            <select class="form-control" id="status" name="status">
+                                  <option selected>--select--</option>
+                                  <option>Active</option>
+                                  <option>Inactive</option>
+                                  <option>Suspended</option>
+                            </select>
+                        </div>
+
+
+
+
+
+                            <div class="form-group">
+                              <div class="form-group">
+                                <label for="sel3" class="lables">Choose Bill Plan</label>
+                                    <select name="bill" class="form-control">
+                                        <option  selected> --select--</option>
+                                            {% for bill in bills %}
+                                                <option>{{bill.billplan}}</option>
+                                            {% endfor %}
+                                    </select>
+                              </div>
+                            </div>
+
+
+                            <button type="submit" class="btn">Submit</button>
+                        </form>
+                  </div>
+            </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

@@ -1,0 +1,86 @@
+{% extends 'cdpapp/base.html' %}
+
+{% block title %}SubMenu{% endblock %}
+
+{% block content %}
+
+
+         <div class="container-fluid">
+                <div class="row bg-title">
+                    <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                        <h4 class="page-title">Super Admin</h4> </div>
+                    <!-- /.col-lg-12 -->
+                </div>
+                <!-- /.row -->
+                <!-- ============================================================== -->
+                <!-- Different data widgets -->
+                <!-- ============================================================== -->
+                <!-- .row -->
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="white-box">
+                            <a href="{% url 'cdpapp:add_submenu' %}" class="btn pull-right waves-effect waves-light" style="background-color: rgb(50, 50, 95);color: white;" >Add SubMenu
+                            </a>
+                            <h3 class="box-title">Details</h3>
+
+                            <div class="table-responsive">
+                                <table class="table table-bordered" role="grid">
+                                    <thead>
+                                        <tr>
+                                            <th>Menu </th>
+                                            <th>Sub Menu</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                     <tbody>
+                                        {% for menu in menus %}
+                                            {% for submenu in submenus %}
+                                                {% if submenu.menu == menu %}
+                                                    <tr>
+                                                        <td>{{submenu.menu}}</td>
+                                                        <td>{{submenu.submenu}}</td>
+                                                        <td>
+                                                            <div class="btn-toolbar ">
+                                                            <a href="{% url 'cdpapp:edit_submenu' submenu.id %}" class="btn btn-info"><i class="fa fa-pencil" style="font-size: 15px;color: white;float: right;"></i></a>
+                                                            <a href="{% url 'cdpapp:delete_submenu' submenu.id %}" class="btn btn-info"><i class="fa fa-trash" style="font-size: 15px;color: white;float: right"></i></a>
+                                                        </div>
+                                                        </td>
+                                                    </tr>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+
+                         {% if menus.has_other_pages %}
+                          <ul class="pagination">
+                            {% if menus.has_previous %}
+                              <li><a href="?page={{ menus.previous_page_number }}">&laquo;</a></li>
+                            {% else %}
+                              <li class="disabled"><span>&laquo;</span></li>
+                            {% endif %}
+                            {% for i in menus.paginator.page_range %}
+                              {% if menus.number == i %}
+                                <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                              {% else %}
+                                <li><a href="?page={{ i }}">{{ i }}</a></li>
+                              {% endif %}
+                            {% endfor %}
+                            {% if menus.has_next %}
+                              <li><a href="?page={{ menus.next_page_number }}">&raquo;</a></li>
+                            {% else %}
+                              <li class="disabled"><span>&raquo;</span></li>
+                            {% endif %}
+                          </ul>
+                        {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+
+
+
+
+{% endblock %}

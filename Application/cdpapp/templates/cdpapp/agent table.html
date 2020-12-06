@@ -1,0 +1,82 @@
+{% extends 'cdpapp/base.html' %}
+
+{% block title %}Agents{% endblock %}
+
+{% block content %}
+
+
+         <div class="container-fluid">
+                <div class="row bg-title">
+                    <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                        <h4 class="page-title">Admin</h4> </div>
+                    <!-- /.col-lg-12 -->
+                </div>
+                <!-- /.row -->
+                <!-- ============================================================== -->
+                <!-- Different data widgets -->
+                <!-- ============================================================== -->
+                <!-- .row -->
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="white-box">
+                            <a href="{% url 'cdpapp:add_agent' %}" class="btn pull-right waves-effect waves-light" style="background-color: rgb(50, 50, 95);color: white;" >Add Agent
+                            </a>
+                            <h3 class="box-title">Details</h3>
+
+                            <div class="table-responsive">
+                                <table class="table table-bordered" role="grid">
+                                    <thead>
+                                        <tr>
+                                            <th>Agent</th>
+                                            <th>Mac ID</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                     <tbody>
+                                        {% for agent in agents %}
+                                            <tr>
+                                                <td>{{agent.fname}} {{agent.lname}}</td>
+                                                <td>{{agent.mac_id}}</td>
+                                                <td>
+                                                    <div class="btn-toolbar ">
+                                                    <a href="{% url 'cdpapp:edit_agent' agent.id %}" class="btn"><i class="fa fa-pencil" style="font-size: 15px;color: white;"></i></a>
+                                                    <a href="{% url 'cdpapp:delete_agent' agent.id %}" class="btn btn1"><i class="fa fa-trash" style="font-size: 15px;color: white;"></i></a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+
+                         {% if agents.has_other_pages %}
+                          <ul class="pagination">
+                            {% if agents.has_previous %}
+                              <li><a href="?page={{ agents.previous_page_number }}">&laquo;</a></li>
+                            {% else %}
+                              <li class="disabled"><span>&laquo;</span></li>
+                            {% endif %}
+                            {% for i in agents.paginator.page_range %}
+                              {% if agents.number == i %}
+                                <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                              {% else %}
+                                <li><a href="?page={{ i }}">{{ i }}</a></li>
+                              {% endif %}
+                            {% endfor %}
+                            {% if agents.has_next %}
+                              <li><a href="?page={{ agents.next_page_number }}">&raquo;</a></li>
+                            {% else %}
+                              <li class="disabled"><span>&raquo;</span></li>
+                            {% endif %}
+                          </ul>
+                        {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+
+
+
+
+{% endblock %}

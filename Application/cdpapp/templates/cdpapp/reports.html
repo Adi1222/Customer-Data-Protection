@@ -1,0 +1,460 @@
+{% extends 'cdpapp/base.html' %}
+
+{% block title %}Reports{% endblock %}
+
+{% block content %}
+
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/TableExport/4.0.11/css/tableexport.min.css">
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<script type="text/javascript" src="https://fastcdn.org/FileSaver.js/1.1.20151003/FileSaver.min.js"></script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/TableExport/4.0.11/js/tableexport.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(()=>{
+
+        function download_csv(csv, filename) {
+        var csvFile;
+        var downloadLink;
+
+        // CSV FILE
+        csvFile = new Blob([csv], {type: "text/csv"});
+
+        // Download link
+        downloadLink = document.createElement("a");
+
+        // File name
+        downloadLink.download = filename;
+
+        // We have to create a link to the file
+        downloadLink.href = window.URL.createObjectURL(csvFile);
+
+        // Make sure that the link is not displayed
+        downloadLink.style.display = "none";
+
+        // Add the link to your DOM
+        document.body.appendChild(downloadLink);
+
+        // Lanzamos
+        downloadLink.click();
+        }
+
+        function export_table_to_csv(html, filename) {
+            var csv = [];
+            var rows = document.querySelectorAll("table tr");
+
+            for (var i = 0; i < rows.length; i++) {
+                var row = [], cols = rows[i].querySelectorAll("td, th");
+
+                for (var j = 0; j < cols.length; j++)
+                    row.push(cols[j].innerText);
+
+                csv.push(row.join(","));
+            }
+
+            // Download CSV
+            download_csv(csv.join("\n"), filename);
+        }
+
+
+        $('#download1').click(function() {
+
+            var html = document.querySelector("table").outerHTML;
+	        export_table_to_csv(html, "reports.csv");
+
+        });
+
+        var startdate, enddate;
+
+
+        $('#sd').change(function(){
+            startdate = $('#sd').val();
+        });
+
+        $('#ed').change(function(){
+            enddate = $('#ed').val();
+        });
+
+        $("select#customer").change(function(){
+            var customer_id = $(this).val();
+            var customervalue = $('#customer :selected').text();
+            console.log(customer_id);
+            console.log(customervalue);
+
+            $('#ag').prop("hidden", false);
+            $('#cat').prop("hidden", false);
+
+            var opt = "";
+            fetchAgents(customer_id);
+
+            $("select#agent1").html(`<option selected>--select--</option><option value='All'>All</option>`);
+
+            function fetchAgents(customer_id){
+                $.ajax({
+                    url:'{% url 'cdpapp:get_agents' %}',
+                    type: 'POST',
+                    data:{customer_id:customer_id},
+                })
+                .done(function(response){
+                    for(key in response){
+                        console.log(response[key]['fields']['cluster_name']);
+
+
+                        opt = "<option value='" + response[key]['pk'] + "'>" + response[key]['fields']['fname'] + ' ' + response[key]['fields']['lname'] + "</option>";
+
+                        $("select#agent1").append(opt);
+                    }
+                })
+                .fail(function(){
+                    console.log("Failed");
+                    alert("Select Customer");
+                });
+            }
+
+        });
+
+
+
+
+
+
+
+
+    //  SUPER-ADMIN
+
+        $("#viewreport1").click(function(){
+
+             var cat = $('#category1 :selected').text();
+             var agent = $('#agent1 :selected').text();
+             var tbody = $("tbody");
+
+             var agent_id = $('#agent1 :selected').val();
+             var category = $('#category1 :selected').val();
+             var customer_id = $('#customer :selected').val();
+             tbody.html('');
+
+             console.log(agent);
+
+             $(function() {
+                $.ajax({
+                    url: '{% url 'cdpapp:report_data' %}',
+                    type: 'POST',
+                    data:{startdate:startdate, enddate:enddate, category:category, agent_id:agent_id, customer_id:customer_id},
+                })
+                .done(function(data){
+                    console.log("Success");
+                    //console.log(data);
+                    console.log(data.dates);
+                    console.log(data.incident_data);
+
+                    dates = data.dates;
+                    categories = data.incident_data;
+                    macids = data.macids;
+                    agents = data.agent_data;
+
+                    for(var i=0;i < dates.length; i++) {
+                        html = '<tr><td class="line-content">' + dates[i] + '</td><td class="line-content">' + agents[i] + '</td><td class="line-content">' + categories[i] + '</td><td class="line-content">' + macids[i] + '</td></tr>';
+                        tbody.append(html);
+                    }
+                    $("#pagin").html('');
+                    // Pagination
+                    pageSize = 20;
+
+                    var pageCount =  $(".line-content").length / pageSize;
+
+                     for(var i = 0 ; i<pageCount;i++){
+
+                       $("#pagin").append('<li><a href="#">'+(i+1)+'</a></li> ');
+                     }
+                        $("#pagin li").first().find("a").addClass("current");
+
+                    showPage = function(page) {
+                        $(".line-content").hide();
+                        $(".line-content").each(function(n) {
+                            if (n >= pageSize * (page - 1) && n < pageSize * page)
+                                $(this).show();
+                        });
+                    }
+
+                    showPage(1);
+
+                    $("#pagin li a").click(function() {
+                        $("#pagin li a").removeClass("current");
+                        $(this).addClass("current");
+                        showPage(parseInt($(this).text()))
+                    });
+
+
+                })
+                .fail(function(){
+                    console.log("Failed");
+                    alert("No data Available");
+                });
+             });
+
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+        $("#viewreport").click(function(){
+
+             var cat = $('#category :selected').text();
+             var agent = $('#agent :selected').text();
+             var tbody = $("tbody");
+
+             var agent_id = $('#agent :selected').val();
+             var category = $('#category :selected').val();
+             var customer_id = $('#customer :selected').val();
+             tbody.html('');
+
+             console.log(agent);
+
+             $(function() {
+                $.ajax({
+                    url: '{% url 'cdpapp:report_data' %}',
+                    type: 'POST',
+                    data:{startdate:startdate, enddate:enddate, category:category, agent_id:agent_id},
+                })
+                .done(function(data){
+                    console.log("Success");
+                    //console.log(data);
+                    console.log(data.dates);
+                    console.log(data.incident_data);
+
+                    dates = data.dates;
+                    categories = data.incident_data;
+                    macids = data.macids;
+                    agents = data.agent_data;
+
+                    for(var i=0;i < dates.length; i++) {
+                        html = '<tr><td class="line-content">' + dates[i] + '</td><td class="line-content">' + agents[i] + '</td><td class="line-content">' + categories[i] + '</td><td class="line-content">' + macids[i] + '</td></tr>';
+                        tbody.append(html);
+                    }
+                    $("#pagin").html('');
+                    // Pagination
+                    pageSize = 20;
+
+                    var pageCount =  $(".line-content").length / pageSize;
+
+                     for(var i = 0 ; i<pageCount;i++){
+
+                       $("#pagin").append('<li><a href="#">'+(i+1)+'</a></li> ');
+                     }
+                        $("#pagin li").first().find("a").addClass("current");
+
+                    showPage = function(page) {
+                        $(".line-content").hide();
+                        $(".line-content").each(function(n) {
+                            if (n >= pageSize * (page - 1) && n < pageSize * page)
+                                $(this).show();
+                        });
+                    }
+
+                    showPage(1);
+
+                    $("#pagin li a").click(function() {
+                        $("#pagin li a").removeClass("current");
+                        $(this).addClass("current");
+                        showPage(parseInt($(this).text()))
+                    });
+
+
+                })
+                .fail(function(){
+                    console.log("Failed");
+                    alert("No data Available");
+                });
+             });
+
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+    });
+</script>
+
+
+
+
+
+    <div class="container-fluid">
+        <div class="row bg-title">
+            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                <h4 class="page-title">Report</h4> </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+        <!-- ============================================================== -->
+        <!-- Different data widgets -->
+        <!-- ============================================================== -->
+        <!-- .row -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="white-box analytics-info">
+                    <h3 class="box-title">Incident Reports</h3>
+                    <br>
+                    <div class="row">
+
+                        <div class="col-md-6 col-sm-12">
+                            <div class="form-group inline-block">
+                                <label >Start Date</label>
+                                <input type="date" name="startdate" id="sd" class="form-control">
+                               </div>
+                        </div>
+
+                        <div class="col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label >End Date</label>
+                                <input type="date" name="enddate" id="ed" class="form-control">
+                               </div>
+                        </div>
+
+
+
+
+                        {% if request.user.is_superuser %}
+                            <div class="col-md-6 col-sm-12">
+                                <label for="sel1" class="lables">Choose Customer</label>
+                                <select class="form-control" id="customer" name="customer">
+                                      <option selected>--select--</option>
+                                            {% for customer in customers %}
+                                                <option id="{{customer.id}}" value="{{ customer.id }}">{{customer.cust_org}}</option>
+                                            {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 col-sm-12" id="ag" hidden>
+                                <label for="sel1" class="lables">Choose Agent</label>
+                                <select class="form-control" id="agent1" name="agent">
+                                      <option selected>--select--</option>
+
+                                </select>
+                            </div>
+
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+
+
+                            <div class="col-md-6 col-sm-12" id="cat" hidden>
+                                <label for="sel2" class="lables">Choose Category</label>
+                                <select class="form-control" id="category1" name="category">
+                                      <option selected>--select--</option>
+                                            {% for category in categories %}
+                                                <option value="{{ category }}">{{category}}</option>
+                                            {% endfor %}
+                                </select>
+                            </div>
+
+                        {% else %}
+                            <div class="col-md-6 col-sm-12">
+                                <label for="sel1" class="lables">Choose Agent</label>
+                                <select class="form-control" id="agent" name="agent">
+                                      <option selected>--select--</option>
+                                            <option value="All">All</option>
+                                            {% for agent in agents %}
+                                                <option id="{{agent.id}}" value="{{ agent.id }}">{{agent.fname}} {{agent.lname}}</option>
+                                            {% endfor %}
+                                </select>
+                            </div>
+
+
+                            <div class="col-md-6 col-sm-12">
+                                <label for="sel2" class="lables">Choose Category</label>
+                                <select class="form-control" id="category" name="category">
+                                      <option selected>--select--</option>
+                                            {% for category in categories %}
+                                                <option value="{{ category }}">{{category}}</option>
+                                            {% endfor %}
+                                </select>
+                            </div>
+                        {% endif %}
+
+
+
+
+
+                        {% if request.user.is_superuser %}
+                            <div>
+                                    <input type="button" id="viewreport1" class="btn pull-right" value="View Report" style="border:2px solid rgb(50, 50, 95);display:inline-block;list-style: none;">
+                            </div>
+                        {% else %}
+                             <div>
+                                    <input type="button" id="viewreport" class="btn pull-right" value="View Report" style="border:2px solid rgb(50, 50, 95);display:inline-block;list-style: none;">
+                            </div>
+                        {% endif %}
+
+
+
+                    </div>
+
+                    <br><br><br>
+
+                    <div class="table-responsive" id="tb">
+                        <table class="table table-bordered" role="grid">
+                            <thead>
+                                <tr>
+                                    <th>Date </th>
+                                    <th>Agent</th>
+                                    <th>Incident</th>
+                                    <th>Mac ID</th>
+                                </tr>
+                            </thead>
+                             <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
+
+
+
+
+                    <ul id="pagin">
+
+                    </ul>
+
+
+
+
+                    <div>
+                        <input type="button" class="btn pull-right" id="download1" value="Download Details" style="border:2px solid rgb(50, 50, 95);display:inline-block;list-style: none;">
+                    </div>
+                    <br><br>
+                </div>
+            </div>
+        </div>
+        <!--/.row -->
+        <!--row -->
+        <!-- /.row -->
+    </div>
+
+
+{% endblock %}
