@@ -24,7 +24,7 @@ The agents can access the Customer applications via secured channels from home, 
 
 ### 1. Login Page
 
-<img src="Screenshots/Login.png" width="100">
+<img src="Screenshots/Login.png" >
 
 
 ### 2. Dashboard.png
