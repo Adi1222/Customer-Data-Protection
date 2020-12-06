@@ -40,3 +40,8 @@ The agents can access the Customer applications via secured channels from home, 
 ### 4. Mobile Detected
 
 ![](Screenshots/Mobile-Detected.jpg)
+
+
+### 5. Multiple People (Non Employee Surrounding the background)
+
+![](Screenshots/Multiple-People-Detected.jpg)
