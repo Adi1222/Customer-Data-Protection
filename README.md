@@ -60,4 +60,3 @@ The agents can access the Customer applications via secured channels from home, 
 
 
 ### 8. Agents Data
-![](Screenshots/agents.png)
