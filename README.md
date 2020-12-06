@@ -26,9 +26,11 @@ The agents can access the Customer applications via secured channels from home, 
 
 ![](Screenshots/Login.png)
 
+
 ### 2. Dashboard.png
 
 ![](Screenshots/Dashboard.png)
+
 
 ### 3. Camera Tampering Chart 
 
