@@ -57,3 +57,7 @@ The agents can access the Customer applications via secured channels from home, 
 
 ### 7. Incident Reports
 ![](Screenshots/incidentreports.png)
+
+
+### 8. Agents Data
+![](Screenshots/agents.png)
