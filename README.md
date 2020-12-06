@@ -49,3 +49,7 @@ The agents can access the Customer applications via secured channels from home, 
 ### 5. Multiple People (Non Employee Surrounding the background)
 
 ![](Screenshots/Multiple-People-Detected.jpg)
+
+
+### 6. Camera Tampered
+![](Screenshots/Camera-Tampered.jpg)
